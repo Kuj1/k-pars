@@ -3,7 +3,6 @@ import datetime
 import os
 import json
 
-import requests
 from fake_useragent import UserAgent
 import aiohttp
 import asyncio
@@ -15,9 +14,6 @@ another_dir_path = os.path.join(os.getcwd(), 'usefully_data')
 
 if not os.path.exists(dir_path):
     os.mkdir(dir_path)
-
-# if not os.path.exists(another_dir_path):
-#     os.mkdir(another_dir_path)
 
 headers = {
     'Host': 'nl.go.kr',
@@ -90,23 +86,6 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%3D120'
         ]
 
-# count_r = 0
-# start = time.time()
-#
-# for i_data in data:
-#     response = requests.post(
-#         'https://nl.go.kr/seoji/module/S80100000000_intgr_select_search_engine_data.ajax',
-#         headers=headers, data=i_data
-#     )
-#
-#     count_r += 1
-#
-#     with open(f'data_{count_r}.json', 'w') as outfile:
-#         json.dump(response.json(), outfile, indent=4, ensure_ascii=False)
-#
-# stop = time.time()
-# timing = stop - start
-#
 start = time.time()
 
 
@@ -126,12 +105,14 @@ async def main():
 asyncio.run(main())
 stop = time.time()
 timing = stop - start
+
 print(f'{round(timing, 2)}s.')
+
 dt = datetime.datetime.now()
 date_now = dt.strftime('%Y%m%d')
 max_date = list()
 
-c = 0
+counter_parse_date = 0
 
 for i_dir in os.listdir(dir_path):
     with open(os.path.join(dir_path, i_dir), 'r') as doc:
@@ -142,9 +123,7 @@ for i_dir in os.listdir(dir_path):
             publish_predate = check_result['fields']['publish_predate']
             if publish_predate >= date_now:
                 max_date.append(publish_predate)
-                c += 1
-                # with open(f'{os.path.join(another_dir_path, f"info_{c}.json")}', 'w') as document:
-                #     json.dump(check_result, document, indent=4, ensure_ascii=False, check_circular=True)
+                counter_parse_date += 1
             if publish_predate > max(max_date):
                 print(check_result)
                 time.sleep(1.5)
