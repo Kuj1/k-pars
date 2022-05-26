@@ -91,7 +91,7 @@ async def main():
     url = 'https://nl.go.kr/seoji/module/S80100000000_intgr_select_search_engine_data.ajax'
 
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=64, ssl=False), headers=headers) as session:
-        print('Load data...\n')
+        print('Checking data...\n')
         count_r = 0
         for i_data in data:
             count_r += 1
