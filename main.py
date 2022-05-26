@@ -86,45 +86,52 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%3D120'
         ]
 
-start = time.time()
-
 
 async def main():
     url = 'https://nl.go.kr/seoji/module/S80100000000_intgr_select_search_engine_data.ajax'
 
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=64, ssl=False), headers=headers) as session:
+        print('Load data...\n')
         count_r = 0
         for i_data in data:
             count_r += 1
             async with session.post(url, data=i_data) as resp:
-                print(await resp.text())
                 with open(f'{os.path.join(dir_path, f"data_{count_r}.json")}', 'w') as outfile:
                     json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
 
 
-asyncio.run(main())
-stop = time.time()
-timing = stop - start
-
-print(f'{round(timing, 2)}s.')
-
 dt = datetime.datetime.now()
 date_now = dt.strftime('%Y%m%d')
 max_date = list()
+with open('date.txt', 'r') as date:
+    for i in date:
+        max_date.append(i.replace('\n', ''))
 
 counter_parse_date = 0
+counter_calls = 0
 
-for i_dir in os.listdir(dir_path):
-    with open(os.path.join(dir_path, i_dir), 'r') as doc:
-        file = json.load(doc)
-        result = (x for x in file['result']['rows'])
-        for check_result in result:
-            json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
-            publish_predate = check_result['fields']['publish_predate']
-            if publish_predate >= date_now:
-                max_date.append(publish_predate)
-                counter_parse_date += 1
-            if publish_predate > max(max_date):
-                print(check_result)
-                time.sleep(1.5)
-
+while True:
+    asyncio.run(main())
+    for i_dir in os.listdir(dir_path):
+        with open(os.path.join(dir_path, i_dir), 'r') as doc:
+            file = json.load(doc)
+            result = (x for x in file['result']['rows'])
+            for check_result in result:
+                json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
+                publish_predate = check_result['fields']['publish_predate']
+                if (publish_predate >= date_now) and (publish_predate not in max_date):
+                    with open('date.txt', 'a') as date:
+                        date.write(f'{publish_predate}\n')
+                    max_date.append(publish_predate)
+                    print(f'"title": {check_result["fields"]["title"]}\n'
+                          f'"author": {check_result["fields"]["author"]}\n'
+                          f'"publisher": {check_result["fields"]["publisher"]}\n'
+                          f'"publish_predate": {check_result["fields"]["publish_predate"]}\n'
+                          f'"pre_price": {check_result["fields"]["pre_price"]}\n'
+                          f'"set_isbn": {check_result["fields"]["publish_predate"]}\n'
+                          f'"form": {check_result["fields"]["form"]}\n')
+                    os.system("say beep")
+                    with open('res_data.txt', 'a') as d:
+                        d.write(json_res + '\n')
+                    counter_parse_date += 1
+                    time.sleep(1)
