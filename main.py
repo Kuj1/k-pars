@@ -3,11 +3,8 @@ import datetime
 import os
 import json
 
-from fake_useragent import UserAgent
 import aiohttp
 import asyncio
-
-UA = UserAgent()
 
 dir_path = os.path.join(os.getcwd(), 'processed_url')
 another_dir_path = os.path.join(os.getcwd(), 'usefully_data')
@@ -20,7 +17,7 @@ headers = {
     'Accept': '*/*',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'X-Requested-With': 'XMLHttpRequest',
-    'User-Agent': f'{UA.random}',
+    'User-Agent': 'Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11',
     'Origin': 'https://nl.go.kr',
     'Referer': 'https://nl.go.kr/seoji/contents/S80100000000.do?topSearchType=TITLE&'
                'topSearchKeyword=%EB%84%A4%EC%9D%B4%EB%B2%84%EC%9B%B9%ED%88%B0',
