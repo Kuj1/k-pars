@@ -93,14 +93,14 @@ async def main():
         for i_data in data:
             count_r += 1
             async with session.post(url, data=i_data) as resp:
-                with open(f'{os.path.join(dir_path, f"data_{count_r}.json")}', 'w') as outfile:
+                with open(f'{os.path.join(dir_path, f"data_{count_r}.json")}', 'w', encoding="utf-8") as outfile:
                     json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
 
 
 dt = datetime.datetime.now()
 date_now = dt.strftime('%Y%m%d')
 max_date = list()
-with open('date.txt', 'r') as date:
+with open('date.txt', 'r', encoding="utf-8") as date:
     for i in date:
         max_date.append(i.replace('\n', ''))
 
@@ -110,14 +110,14 @@ counter_calls = 0
 while True:
     asyncio.run(main())
     for i_dir in os.listdir(dir_path):
-        with open(os.path.join(dir_path, i_dir), 'r') as doc:
+        with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8") as doc:
             file = json.load(doc)
             result = (x for x in file['result']['rows'])
             for check_result in result:
                 json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
                 publish_predate = check_result['fields']['publish_predate']
                 if (publish_predate >= date_now) and (publish_predate not in max_date):
-                    with open('date.txt', 'a') as date:
+                    with open('date.txt', 'a', encoding="utf-8") as date:
                         date.write(f'{publish_predate}\n')
                     max_date.append(publish_predate)
                     print(f'"title": {check_result["fields"]["title"]}\n'
@@ -128,7 +128,7 @@ while True:
                           f'"set_isbn": {check_result["fields"]["publish_predate"]}\n'
                           f'"form": {check_result["fields"]["form"]}\n')
                     os.system("say beep")
-                    with open('res_data.txt', 'a') as d:
+                    with open('res_data.txt', 'a', encoding="utf-8") as d:
                         d.write(json_res + '\n')
                     counter_parse_date += 1
                     time.sleep(1)
