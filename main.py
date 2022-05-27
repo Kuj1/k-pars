@@ -4,6 +4,7 @@ import json
 
 import aiohttp
 import asyncio
+from pyfiglet import Figlet
 
 dir_path = os.path.join(os.getcwd(), 'processed_url')
 another_dir_path = os.path.join(os.getcwd(), 'usefully_data')
@@ -145,12 +146,24 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                             await asyncio.sleep(1)
 
                             with open('res_data.txt', 'a', encoding="utf-8") as d:
-                                d.write(json_res + '\n')
+                                d.write(json_res + ',' + '\n')
                             counter += 1
             except KeyError:
                 continue
 
+title = Figlet(font='cosmic')
+print(title.renderText('K-Pars\nBooks'))
+
 if __name__ == '__main__':
     while True:
-        asyncio.run(received_data())
-        asyncio.run(filter_result())
+        print('1) Start scanning data')
+        print('2) Show all raw results')
+        enter_decision = int(input('Choose option and enter number:\n-> '))
+        if enter_decision == 1:
+            while True:
+                asyncio.run(received_data())
+                asyncio.run(filter_result())
+        elif enter_decision == 2:
+            with open('res_data.txt', 'r', encoding="utf-8") as res:
+                for i in res:
+                    print(i)
