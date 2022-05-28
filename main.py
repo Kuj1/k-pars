@@ -149,7 +149,6 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                                   f'"pre_price": {check_result["fields"]["pre_price"]}\n'
                                   f'"set_isbn": {check_result["fields"]["publish_predate"]}\n'
                                   f'"form": {check_result["fields"]["form"]}\n')
-                            print(id_res)
                             os.system("say beep")
                             await asyncio.sleep(1)
 
