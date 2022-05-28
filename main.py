@@ -8,6 +8,9 @@ import aiohttp
 import asyncio
 from pyfiglet import Figlet
 
+if platform.system() == 'Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 dir_path = os.path.join(os.getcwd(), 'processed_url')
 another_dir_path = os.path.join(os.getcwd(), 'usefully_data')
 
@@ -167,8 +170,6 @@ if __name__ == '__main__':
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
             while True:
-                if platform.system() == 'Windows':
-                    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
                 start = time.time()
                 asyncio.run(received_data())
                 stop = time.time()
