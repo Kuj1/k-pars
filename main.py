@@ -133,6 +133,11 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                     author = check_result['fields']['publisher']
                     index_title = check_result['fields']['index_title']
                     id_res = check_result['location']['rowid']
+
+                    url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='
+                    set_isbn = check_result["fields"]["set_isbn"]
+                    ea_isbn = check_result["fields"]["ea_isbn"]
+
                     if (first_title_hieroglyph in index_title) or (second_title_hieroglyph in index_title) \
                        or (third_title_hieroglyph in index_title and author_hieroglyph in author) \
                        or (first_publisher_hieroglyph in publisher) or (second_publisher_hieroglyph in publisher):
@@ -140,14 +145,13 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                         if (publish_predate >= date_now) and (id_res not in row_id):
                             with open('ids.txt', 'a', encoding="utf-8") as ids:
                                 ids.write(f'{id_res}\n')
-                            row_id.append(publish_predate)
-                            print(f'"title": {check_result["fields"]["title"]}\n'
-                                  f'"author": {check_result["fields"]["author"]}\n'
-                                  f'"publisher": {check_result["fields"]["publisher"]}\n'
-                                  f'"publish_predate": {check_result["fields"]["publish_predate"]}\n'
-                                  f'"pre_price": {check_result["fields"]["pre_price"]}\n'
-                                  f'"set_isbn": {check_result["fields"]["publish_predate"]}\n'
-                                  f'"form": {check_result["fields"]["form"]}\n')
+                            row_id.append(id_res)
+                            link = set_isbn if set_isbn else ea_isbn
+                            print(f'Title: {check_result["fields"]["title"]}\n'
+                                  f'Author: {check_result["fields"]["author"]}\n'
+                                  f'Publisher: {check_result["fields"]["publisher"]}\n'
+                                  f'Publish_predate: {check_result["fields"]["publish_predate"]}\n'
+                                  f'Link: {url_pattern}{link}\n')
                             os.system("say beep")
                             await asyncio.sleep(1)
 
@@ -164,7 +168,7 @@ print(title.renderText('K-Pars\nBooks'))
 if __name__ == '__main__':
     while True:
         print('1) Start scanning data')
-        print('2) Show all raw results')
+        print('2) Show all raw results\n')
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
             while True:
@@ -174,3 +178,5 @@ if __name__ == '__main__':
             with open('res_data.txt', 'r', encoding="utf-8") as res:
                 for i in res:
                     print(i)
+        else:
+            print('Incorrect enter value\n')
