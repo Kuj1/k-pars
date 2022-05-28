@@ -170,10 +170,7 @@ if __name__ == '__main__':
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
             while True:
-                start = time.time()
                 asyncio.run(received_data())
-                stop = time.time()
-                print(stop - start)
                 asyncio.run(filter_result())
         elif enter_decision == 2:
             with open('res_data.txt', 'r', encoding="utf-8") as res:
