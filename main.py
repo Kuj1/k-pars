@@ -2,7 +2,9 @@ import datetime
 import os
 import json
 import platform
-# import time
+import time
+import concurrent.futures
+from multiprocessing import cpu_count
 
 import aiohttp
 import asyncio
@@ -96,17 +98,13 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         ]
 
 
-async def received_data() -> None:
+async def received_data(data, c) -> None:
     url = 'https://nl.go.kr/seoji/module/S80100000000_intgr_select_search_engine_data.ajax'
 
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=64, ssl=False), headers=headers) as session:
-        print('Receiving data...\n')
-        count_r = 0
-        for i_data in data:
-            count_r += 1
-            async with session.post(url, data=i_data) as resp:
-                with open(f'{os.path.join(dir_path, f"data_{count_r}.json")}', 'w', encoding="utf-8") as outfile:
-                    json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
+        async with session.post(url, data=data) as resp:
+            with open(f'{os.path.join(dir_path, f"data_{c}.json")}', 'w', encoding="utf-8") as outfile:
+                json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
         await asyncio.sleep(.25)
 
 
@@ -121,12 +119,11 @@ counter_parse_date = 0
 
 
 async def filter_result(counter: int = counter_parse_date) -> None:
-    print('Analyzing data...\n')
     for i_dir in os.listdir(dir_path):
         with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8") as doc:
             file = json.load(doc)
-            result = (x for x in file['result']['rows'])
             try:
+                result = (x for x in file['result']['rows'])
                 for check_result in result:
                     json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
                     publish_predate = check_result['fields']['publish_predate']
@@ -148,6 +145,7 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                                 ids.write(f'{id_res}\n')
                             row_id.append(id_res)
                             link = set_isbn if set_isbn else ea_isbn
+                            print(check_result['location']['rowid'])
                             print(f'Title: {check_result["fields"]["title"]}\n'
                                   f'Author: {check_result["fields"]["author"]}\n'
                                   f'Publisher: {check_result["fields"]["publisher"]}\n'
@@ -163,21 +161,52 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                 continue
 
 
-title = Figlet(font='cosmic')
-print(title.renderText('K-Pars\nBooks'))
+def get_and_output(data, c):
+    asyncio.run(received_data(data, c))
+
+
+def main():
+    num_cores = cpu_count()
+
+    futures = []
+    length_data = len(data)
+
+    with concurrent.futures.ProcessPoolExecutor(num_cores) as executor:
+        count = 0
+        for f in data:
+            count += 1
+            new_future = executor.submit(
+                get_and_output,
+                data=f,
+                c=count
+            )
+            futures.append(new_future)
+            length_data -= 1
+
+    concurrent.futures.wait(futures)
+
 
 if __name__ == '__main__':
+    title = Figlet(font='cosmic')
+    print(title.renderText('K-Pars\nBooks'))
     while True:
         print('1) Start scanning data')
         print('2) Show all raw results\n')
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
+            print('[Receiving data]\n')
             while True:
+                start = time.time()
+                main()
                 stop = time.time()
+                print(stop - start)
                 asyncio.run(filter_result())
         elif enter_decision == 2:
-            with open('res_data.txt', 'r', encoding="utf-8") as res:
-                for i in res:
-                    print(i)
+            try:
+                with open('res_data.txt', 'r', encoding="utf-8") as res:
+                    for i in res:
+                        print(i)
+            except FileNotFoundError:
+                print('\n[No result yet]\n')
         else:
-            print('Incorrect enter value\n')
+            print('\n[Incorrect enter value]\n')
