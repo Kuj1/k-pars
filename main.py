@@ -2,6 +2,7 @@ import datetime
 import os
 import json
 import platform
+# import time
 
 import aiohttp
 import asyncio
@@ -43,7 +44,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%2Ccip_yn%2Cindex_series_title%2Cindex_title%2Cindex_author%2Cindex_publisher%2Crelated_isbn%2Cform_detail'
         '%2Cform_detail_version%2Ckolis_control_no%2Ckolis_img_path%2Cbook_introduction%2Cbook_tb_cnt%2Cbook_summary'
         '%26from%3Dcip.cip%26where%3Dtext_idx%253D%2522%25EB%25A7%258C%25ED%2599%2594%2522%2520allword%2520order%2520by'
-        '%2520publish_predate%2520desc%26offset%3D0%26limit%3D150',
+        '%2520publish_predate%2520desc%26offset%3D0%26limit%3D2000',
         'searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_expression%2Csubject%2Cseries_no%2Cea_isbn'
         '%2Cea_add_code%2Cebook_yn%2Cbib_yn%2Cset_isbn%2Cset_add_code%2Ctitle%2Cvol%2Cauthor%2Cpublisher%2Cseries_title'
         '%2Cedition_stmt%2Cpre_price%2Cpublish_year%2Cpublish_predate%2Cinput_date%2Cupdate_date%2Cbook_size%2Cpage'
@@ -52,7 +53,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%2Cindex_series_title%2Cindex_title%2Cindex_author%2Cindex_publisher%2Crelated_isbn%2Cform_detail'
         '%2Cform_detail_version%2Ckolis_control_no%2Ckolis_img_path%2Cbook_introduction%2Cbook_tb_cnt%2Cbook_summary'
         '%26from%3Dcip.cip%26where%3Dtext_idx%253D%2522%25EC%259B%25B9%25ED%2588%25B0%2522%2520allword%2520order%2520by'
-        '%2520publish_predate%2520desc%26offset%3D0%26limit%3D150',
+        '%2520publish_predate%2520desc%26offset%3D0%26limit%3D2000',
         'searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_expression%2Csubject%2Cseries_no%2Cea_isbn'
         '%2Cea_add_code%2Cebook_yn%2Cbib_yn%2Cset_isbn%2Cset_add_code%2Ctitle%2Cvol%2Cauthor%2Cpublisher%2Cseries_title'
         '%2Cedition_stmt%2Cpre_price%2Cpublish_year%2Cpublish_predate%2Cinput_date%2Cupdate_date%2Cbook_size%2Cpage'
@@ -61,7 +62,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%2Cindex_series_title%2Cindex_title%2Cindex_author%2Cindex_publisher%2Crelated_isbn%2Cform_detail'
         '%2Cform_detail_version%2Ckolis_control_no%2Ckolis_img_path%2Cbook_introduction%2Cbook_tb_cnt%2Cbook_summary'
         '%26from%3Dcip.cip%26where%3Dtext_idx%253D%2522%25EC%2597%25B0%25EC%259E%25AC%2522%2520allword%2520order%2520by'
-        '%2520publish_predate%2520desc%26offset%3D0%26limit%3D150',
+        '%2520publish_predate%2520desc%26offset%3D0%26limit%3D1500',
         'searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_expression%2Csubject%2Cseries_no%2Cea_isbn'
         '%2Cea_add_code%2Cebook_yn%2Cbib_yn%2Cset_isbn%2Cset_add_code%2Ctitle%2Cvol%2Cauthor%2Cpublisher%2Cseries_title'
         '%2Cedition_stmt%2Cpre_price%2Cpublish_year%2Cpublish_predate%2Cinput_date%2Cupdate_date%2Cbook_size%2Cpage'
@@ -70,7 +71,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%2Cindex_series_title%2Cindex_title%2Cindex_author%2Cindex_publisher%2Crelated_isbn%2Cform_detail'
         '%2Cform_detail_version%2Ckolis_control_no%2Ckolis_img_path%2Cbook_introduction%2Cbook_tb_cnt%2Cbook_summary'
         '%26from%3Dcip.cip%26where%3Dtext_idx%253D%2522%25EA%25B7%25B8%25EB%25A6%25BC%25EC%259E%2591%25EA%25B0%2580'
-        '%2522%2520allword%2520order%2520by%2520publish_predate%2520desc%26offset%3D0%26limit%3D150',
+        '%2522%2520allword%2520order%2520by%2520publish_predate%2520desc%26offset%3D0%26limit%3D1500',
         'searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_expression%2Csubject%2Cseries_no'
         '%2Cea_isbn%2Cea_add_code%2Cebook_yn%2Cbib_yn%2Cset_isbn%2Cset_add_code%2Ctitle%2Cvol%2Cauthor%2Cpublisher'
         '%2Cseries_title%2Cedition_stmt%2Cpre_price%2Cpublish_year%2Cpublish_predate%2Cinput_date%2Cupdate_date'
@@ -80,7 +81,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%2Cform_detail%2Cform_detail_version%2Ckolis_control_no%2Ckolis_img_path%2Cbook_introduction%2Cbook_tb_cnt'
         '%2Cbook_summary%26from%3Dcip.cip%26where%3Dtext_idx'
         '%253D%2522%25EB%2584%25A4%25EC%259D%25B4%25EB%25B2%2584%25EC%259B%25B9%25ED%2588%25B0%2522%2520allword'
-        '%2520order%2520by%2520publish_predate%2520desc%26offset%3D0%26limit%3D150',
+        '%2520order%2520by%2520publish_predate%2520desc%26offset%3D0%26limit%3D2000',
         'searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_expression%2Csubject%2Cseries_no%2Cea_isbn'
         '%2Cea_add_code%2Cebook_yn%2Cbib_yn%2Cset_isbn%2Cset_add_code%2Ctitle%2Cvol%2Cauthor%2Cpublisher%2Cseries_title'
         '%2Cedition_stmt%2Cpre_price%2Cpublish_year%2Cpublish_predate%2Cinput_date%2Cupdate_date%2Cbook_size%2Cpage'
@@ -91,7 +92,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
         '%26from%3Dcip.cip%26where%3Dtext_idx%253D%2522(%25EC%25A3%25BC%25EC%258B%259D%25ED%259A%258C%25EC%2582%25AC)'
         '%25EC%25B9%25B4%25EC%25B9%25B4%25EC%2598%25A4%25EC%2597%2594%25ED%2584%25B0%25ED%2585%258C%25EC%259D%25B8%25EB'
         '%25A8%25BC%25ED%258A%25B8%2522%2520allword%2520order%2520by%2520publish_predate%2520desc%26offset%3D0%26limit'
-        '%3D150'
+        '%3D500'
         ]
 
 
@@ -172,7 +173,7 @@ if __name__ == '__main__':
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
             while True:
-                asyncio.run(received_data())
+                stop = time.time()
                 asyncio.run(filter_result())
         elif enter_decision == 2:
             with open('res_data.txt', 'r', encoding="utf-8") as res:
