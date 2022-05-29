@@ -2,7 +2,6 @@ import datetime
 import os
 import json
 import platform
-import time
 import concurrent.futures
 from multiprocessing import cpu_count
 
@@ -198,10 +197,7 @@ if __name__ == '__main__':
         if enter_decision == 1:
             print('[Receiving data]\n')
             while True:
-                start = time.time()
                 main()
-                stop = time.time()
-                print(stop - start)
                 asyncio.run(filter_result())
         elif enter_decision == 2:
             try:
