@@ -130,7 +130,7 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                     json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
                     publish_predate = check_result['fields']['publish_predate']
                     publisher = check_result['fields']['publisher']
-                    author = check_result['fields']['publisher']
+                    author = check_result['fields']['author']
                     index_title = check_result['fields']['index_title']
                     id_res = check_result['location']['rowid']
 
