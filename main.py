@@ -145,13 +145,15 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                                 ids.write(f'{id_res}\n')
                             row_id.append(id_res)
                             link = set_isbn if set_isbn else ea_isbn
-                            print(check_result['location']['rowid'])
                             print(f'Title: {check_result["fields"]["title"]}\n'
                                   f'Author: {check_result["fields"]["author"]}\n'
                                   f'Publisher: {check_result["fields"]["publisher"]}\n'
                                   f'Publish_predate: {check_result["fields"]["publish_predate"]}\n'
                                   f'Link: {url_pattern}{link}\n')
-                            os.system("say beep")
+                            if platform.system() == 'Windows':
+                                print('\a')
+                            else:
+                                os.system("say beep")
                             await asyncio.sleep(1)
 
                             with open('res_data.txt', 'a', encoding="utf-8") as d:
