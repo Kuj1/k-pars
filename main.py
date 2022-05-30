@@ -102,8 +102,11 @@ async def received_data(data, c) -> None:
 
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=64, ssl=False), headers=headers) as session:
         async with session.post(url, data=data) as resp:
-            with open(f'{os.path.join(dir_path, f"data_{c}.json")}', 'w', encoding="utf-8") as outfile:
-                json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
+            if resp.status != 204 and resp.headers["content-type"].strip().startswith("application/json"):
+                with open(f'{os.path.join(dir_path, f"data_{c}.json")}', 'w', encoding="utf-8-sig") as outfile:
+                    json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
+            else:
+                print('[Bad response]')
         await asyncio.sleep(.25)
 
 
@@ -119,47 +122,50 @@ counter_parse_date = 0
 
 async def filter_result(counter: int = counter_parse_date) -> None:
     for i_dir in os.listdir(dir_path):
-        with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8") as doc:
-            file = json.load(doc)
-            try:
-                result = (x for x in file['result']['rows'])
-                for check_result in result:
-                    json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
-                    publish_predate = check_result['fields']['publish_predate']
-                    publisher = check_result['fields']['publisher']
-                    author = check_result['fields']['author']
-                    index_title = check_result['fields']['index_title']
-                    id_res = check_result['location']['rowid']
+        try:
+            with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8-sig") as doc:
+                file = json.load(doc)
+                try:
+                    result = (x for x in file['result']['rows'])
+                    for check_result in result:
+                        json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
+                        publish_predate = check_result['fields']['publish_predate']
+                        publisher = check_result['fields']['publisher']
+                        author = check_result['fields']['author']
+                        index_title = check_result['fields']['index_title']
+                        id_res = check_result['location']['rowid']
 
-                    url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='
-                    set_isbn = check_result["fields"]["set_isbn"]
-                    ea_isbn = check_result["fields"]["ea_isbn"]
+                        url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='
+                        set_isbn = check_result["fields"]["set_isbn"]
+                        ea_isbn = check_result["fields"]["ea_isbn"]
 
-                    if (first_title_hieroglyph in index_title) or (second_title_hieroglyph in index_title) \
-                       or (third_title_hieroglyph in index_title and author_hieroglyph in author) \
-                       or (first_publisher_hieroglyph in publisher) or (second_publisher_hieroglyph in publisher):
+                        if (first_title_hieroglyph in index_title) or (second_title_hieroglyph in index_title) \
+                           or (third_title_hieroglyph in index_title and author_hieroglyph in author) \
+                           or (first_publisher_hieroglyph in publisher) or (second_publisher_hieroglyph in publisher):
 
-                        if (publish_predate >= date_now) and (id_res not in row_id):
-                            with open('ids.txt', 'a', encoding="utf-8") as ids:
-                                ids.write(f'{id_res}\n')
-                            row_id.append(id_res)
-                            link = set_isbn if set_isbn else ea_isbn
-                            print(f'Title: {check_result["fields"]["title"]}\n'
-                                  f'Author: {check_result["fields"]["author"]}\n'
-                                  f'Publisher: {check_result["fields"]["publisher"]}\n'
-                                  f'Publish_predate: {check_result["fields"]["publish_predate"]}\n'
-                                  f'Link: {url_pattern}{link}\n')
-                            if platform.system() == 'Windows':
-                                print('\a')
-                            else:
-                                os.system("say beep")
-                            await asyncio.sleep(1)
+                            if (publish_predate >= date_now) and (id_res not in row_id):
+                                with open('ids.txt', 'a', encoding="utf-8") as ids:
+                                    ids.write(f'{id_res}\n')
+                                row_id.append(id_res)
+                                link = set_isbn if set_isbn else ea_isbn
+                                print(f'Title: {check_result["fields"]["title"]}\n'
+                                      f'Author: {check_result["fields"]["author"]}\n'
+                                      f'Publisher: {check_result["fields"]["publisher"]}\n'
+                                      f'Publish_predate: {check_result["fields"]["publish_predate"]}\n'
+                                      f'Link: {url_pattern}{link}\n')
+                                if platform.system() == 'Windows':
+                                    print('\a')
+                                else:
+                                    os.system("say beep")
+                                await asyncio.sleep(1)
 
-                            with open('res_data.txt', 'a', encoding="utf-8") as d:
-                                d.write(json_res + ',' + '\n')
-                            counter += 1
-            except KeyError:
-                continue
+                                with open('res_data.txt', 'a', encoding="utf-8") as d:
+                                    d.write(json_res + ',' + '\n')
+                                counter += 1
+                except KeyError:
+                    continue
+        except ValueError:
+            continue
 
 
 def get_and_output(data, c):
