@@ -3,6 +3,7 @@ import os
 import json
 import platform
 import concurrent.futures
+import time
 from multiprocessing import cpu_count
 
 import aiohttp
@@ -112,10 +113,10 @@ async def received_data(data, c) -> None:
 
 dt = datetime.datetime.now()
 date_now = dt.strftime('%Y%m%d')
-row_id = list()
+row_id = set()
 with open('ids.txt', 'r', encoding="utf-8") as rowid:
     for i in rowid:
-        row_id.append(i.replace('\n', ''))
+        row_id.add(i.replace('\n', ''))
 
 counter_parse_date = 0
 
@@ -143,10 +144,10 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                            or (third_title_hieroglyph in index_title and author_hieroglyph in author) \
                            or (first_publisher_hieroglyph in publisher) or (second_publisher_hieroglyph in publisher):
 
-                            if (publish_predate >= date_now) and (id_res not in row_id):
+                            if (publish_predate >= date_now) and (str(id_res) not in row_id):
                                 with open('ids.txt', 'a', encoding="utf-8") as ids:
                                     ids.write(f'{id_res}\n')
-                                row_id.append(id_res)
+                                row_id.add(str(id_res))
                                 link = set_isbn if set_isbn else ea_isbn
                                 print(f'Title: {check_result["fields"]["title"]}\n'
                                       f'Author: {check_result["fields"]["author"]}\n'
@@ -189,6 +190,7 @@ def main():
             )
             futures.append(new_future)
             length_data -= 1
+            time.sleep(1)
 
     concurrent.futures.wait(futures)
 
