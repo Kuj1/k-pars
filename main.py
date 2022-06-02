@@ -106,8 +106,12 @@ async def received_data(data, c) -> None:
             if resp.status != 204 and resp.headers["content-type"].strip().startswith("application/json"):
                 with open(f'{os.path.join(dir_path, f"data_{c}.json")}', 'w', encoding="utf-8-sig") as outfile:
                     json.dump(await resp.json(), outfile, indent=4, ensure_ascii=False)
+                print(resp.status, datetime.datetime.now())
+                print(f'{resp.headers["content-type"]}\n')
             else:
                 print('[Bad response]')
+                print(resp.status, datetime.datetime.now())
+                print(f'{resp.headers["content-type"]}\n')
         await asyncio.sleep(.25)
 
 
@@ -205,7 +209,10 @@ if __name__ == '__main__':
         if enter_decision == 1:
             print('\n[Receiving data]\n')
             while True:
+                start = time.time()
                 main()
+                stop = time.time()
+                print(stop - start)
                 asyncio.run(filter_result())
         elif enter_decision == 2:
             try:
