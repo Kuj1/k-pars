@@ -169,11 +169,11 @@ async def filter_result(counter: int = counter_parse_date) -> None:
             continue
 
 
-def get_and_output(data, c):
+def get_and_output(data: str, c: int) -> None:
     asyncio.run(received_data(data, c))
 
 
-def main():
+def main() -> None:
     num_cores = cpu_count()
 
     futures = []
@@ -203,7 +203,7 @@ if __name__ == '__main__':
         print('2) Show all raw results\n')
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
-            print('[Receiving data]\n')
+            print('\n[Receiving data]\n')
             while True:
                 main()
                 asyncio.run(filter_result())
