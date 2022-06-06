@@ -14,7 +14,6 @@ if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 dir_path = os.path.join(os.getcwd(), 'processed_url')
-another_dir_path = os.path.join(os.getcwd(), 'usefully_data')
 
 if not os.path.exists(dir_path):
     os.mkdir(dir_path)
@@ -99,7 +98,7 @@ data = ['searchUrl=search%3Fselect%3Dcip_id%2Crec_key%2Ccip_key%2Cform%2Cset_exp
 
 
 async def received_data(data, c) -> None:
-    url = 'https://nl.go.kr/seoji/module/S80100000000_intgr_select_search_engine_data.ajax'
+    url = 'https://nl.go.kr/seoji/module/S80100000000_intgr_select_search_engine_data_info.ajax'
 
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=64, ssl=False), headers=headers) as session:
         async with session.post(url, data=data) as resp:
