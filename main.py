@@ -151,10 +151,10 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                 if not release_date_book.startswith(' '):
                     release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[5].get_text()). \
                         replace('발매(예정)일:', '')
-                if int(release_date_book.replace('.', '')) >= int(ref_date):
+                if int(release_date_book.replace('.', '')) >= int(ref_date) and isbn_book not in row_id:
                     with open('ids.txt', 'a', encoding="utf-8") as ids:
                         ids.write(f'{isbn_book}\n')
-                    row_id.add(str(isbn_book))
+                    row_id.add(isbn_book)
 
                     print(f'Title: {title_book}\n'
                           f'Author: {author_book}\n'
