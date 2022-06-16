@@ -1,7 +1,5 @@
 import datetime
 import os
-# import json
-from bs4
 import platform
 import concurrent.futures
 import time
@@ -10,6 +8,8 @@ from multiprocessing import cpu_count
 import aiohttp
 import asyncio
 from pyfiglet import Figlet
+from bs4 import BeautifulSoup
+import lxml
 
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -19,13 +19,6 @@ dir_path = os.path.join(os.getcwd(), 'processed_url')
 if not os.path.exists(dir_path):
     os.mkdir(dir_path)
 
-# first_title_hieroglyph = '만화' +
-# second_title_hieroglyph = '웹툰' +
-# third_title_hieroglyph = '연재' +
-# author_hieroglyph = '그림작가' +
-# first_publisher_hieroglyph = '네이버웹툰'
-# second_publisher_hieroglyph = '(<b>주식회사</b>)<b>카카오엔터테인먼트</b>'
-
 dt = datetime.datetime.now()
 date_now = dt.strftime('%Y-%m-%d')
 
@@ -34,9 +27,9 @@ headers = {
     'Accept': '*/*',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Upgrade-Insecure-Requests': '1',
-    'User-Agent': 'Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11',
+    'User-Agent': 'Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 '
+                  '(KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11',
     'Origin': 'https://nl.go.kr',
-    # 'Connection': 'close'
     'Connection': 'keep-alive'
 }
 
@@ -89,16 +82,14 @@ params = [
         'pageUnit': '100',
         'schType': 'detail',
         'f3': 'publisher',
-        'v3': '네이버웹툰',
-        # 'v8s': f'{date_now}'
+        'v3': '네이버웹툰'
     },
     {
         'page': '1',
         'pageUnit': '100',
         'schType': 'detail',
         'f3': 'publisher',
-        'v3': '(주식회사)카카오엔터테인먼트',
-        # 'v8s': f'{date_now}'
+        'v3': '(주식회사)카카오엔터테인먼트'
     },
 
 ]
@@ -114,15 +105,18 @@ async def received_data(params, c) -> None:
                     outfile.write(await resp.text())
                 print(resp.status, datetime.datetime.now())
                 print(f'{resp.headers["Content-Type"]}\n')
-                # print(resp.headers)
-            # else:
-            #     print(resp.status, datetime.datetime.now())
-            #     print(f'{resp.headers["content-type"]}\n')
+            else:
+                print(resp.status, datetime.datetime.now())
+                print(f'{resp.headers["content-type"]}\n')
         await asyncio.sleep(.25)
 
 
-# dt = datetime.datetime.now()
-# date_now = dt.strftime('%Y%m%d')
+dt = datetime.datetime.now()
+date_now = dt.strftime('%Y-%m-%d')
+ref_date = dt.strftime('%Y%m%d')
+
+url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='
+
 row_id = set()
 with open('ids.txt', 'r', encoding="utf-8") as rowid:
     for i in rowid:
@@ -131,52 +125,65 @@ with open('ids.txt', 'r', encoding="utf-8") as rowid:
 counter_parse_date = 0
 
 
-# async def filter_result(counter: int = counter_parse_date) -> None:
-#     for i_dir in os.listdir(dir_path):
-#         try:
-#             with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8-sig") as doc:
-#                 file = json.load(doc)
-#                 try:
-#                     result = (x for x in file['result']['rows'])
-#                     for check_result in result:
-#                         json_res = json.dumps(check_result, indent=4, ensure_ascii=False)
-#                         publish_predate = check_result['fields']['publish_predate']
-#                         publisher = check_result['fields']['publisher']
-#                         author = check_result['fields']['author']
-#                         index_title = check_result['fields']['index_title']
-#                         id_res = check_result['location']['rowid']
-#
-#                         url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='
-#                         set_isbn = check_result["fields"]["set_isbn"]
-#                         ea_isbn = check_result["fields"]["ea_isbn"]
-#
-#                         if (first_title_hieroglyph in index_title) or (second_title_hieroglyph in index_title) \
-#                            or (third_title_hieroglyph in index_title and author_hieroglyph in author) \
-#                            or (first_publisher_hieroglyph in publisher) or (second_publisher_hieroglyph in publisher):
-#
-#                             if (publish_predate >= date_now) and (str(id_res) not in row_id):
-#                                 with open('ids.txt', 'a', encoding="utf-8") as ids:
-#                                     ids.write(f'{id_res}\n')
-#                                 row_id.add(str(id_res))
-#                                 link = set_isbn if set_isbn else ea_isbn
-#                                 print(f'Title: {check_result["fields"]["title"]}\n'
-#                                       f'Author: {check_result["fields"]["author"]}\n'
-#                                       f'Publisher: {check_result["fields"]["publisher"]}\n'
-#                                       f'Publish_predate: {check_result["fields"]["publish_predate"]}\n'
-#                                       f'Link: {url_pattern}{link}\n')
-#                                 if platform.system() == 'Windows':
-#                                     print('\a')
-#                                 else:
-#                                     os.system("say beep")
-#                                 await asyncio.sleep(1)
-#
-#                                 with open('res_data.txt', 'a', encoding="utf-8") as d:
-#                                     d.write(json_res + ',' + '\n')
-#                                 counter += 1
-#                 except KeyError:
-#                     continue
-#         except ValueError:
-#             continue
+async def filter_result(counter: int = counter_parse_date) -> None:
+    for i_dir in os.listdir(dir_path):
+        with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8") as doc:
+            file = doc.read()
+
+            soup = BeautifulSoup(file, 'lxml')
+            res_data = soup.find('div', class_='resultList').find_all('div', class_='resultData')
+
+            for check_data in res_data:
+                data_block = check_data.find('div', class_='resultInfo').find('div', class_='bookData')
+
+                # type_book = str(data_block.find('div', class_='tit').find('b', class_='themeFC').get_text())
+                title_book = str(data_block.find('div', class_='tit').find('a').get_text()).replace('\n', '')
+                author_book = str(data_block.find('ul', class_='dot-list').find_all('li')[0].get_text()). \
+                    replace('저자 ', ''). \
+                    replace('원작자', ''). \
+                    replace(' :', '')
+                publisher_book = str(data_block.find('ul', class_='dot-list').find_all('li')[1].get_text()). \
+                    replace('발행처: ', '')
+                release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[4].get_text()). \
+                    replace('발매(예정)일:', '')
+                isbn_book = str(data_block.find('ul', class_='dot-list').find_all('li')[2].get_text()). \
+                    replace('ISBN: ', '').replace('세트', '').split('(')[0].replace('-', '')
+                if not release_date_book.startswith(' '):
+                    release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[5].get_text()). \
+                        replace('발매(예정)일:', '')
+                if int(release_date_book.replace('.', '')) >= int(ref_date):
+                    with open('ids.txt', 'a', encoding="utf-8") as ids:
+                        ids.write(f'{isbn_book}\n')
+                    row_id.add(str(isbn_book))
+
+                    print(f'Title: {title_book}\n'
+                          f'Author: {author_book}\n'
+                          f'Publisher: {publisher_book}\n'
+                          f'Release date: {release_date_book}\n'
+                          f'Link: {url_pattern}{isbn_book}\n')
+
+                    if platform.system() == 'Windows':
+                        print('\a')
+                    else:
+                        os.system('say beep')
+
+                    res_books = {
+                            'Title': f'{title_book}',
+                            'Author': f'{author_book}',
+                            'Publisher': f'{publisher_book}',
+                            'Release date': f'{release_date_book}',
+                            'Link': f'{url_pattern}{isbn_book}'
+                        }
+
+                    with open('result_data.txt', 'a', encoding='utf-8') as books:
+                        for key, val in res_books.items():
+                            if key.startswith('Link'):
+                                books.write(f'{key}:{val}\n\n')
+                            else:
+                                books.write(f'{key}:{val}\n')
+
+                    await asyncio.sleep(1)
+                    counter += 1
 
 
 def get_and_output(params: str, c: int) -> None:
@@ -200,7 +207,6 @@ def main() -> None:
             )
             futures.append(new_future)
             length_data -= 1
-            # time.sleep(2)
 
     concurrent.futures.wait(futures)
 
@@ -210,7 +216,7 @@ if __name__ == '__main__':
     print(title.renderText('K-Pars\nBooks'))
     while True:
         print('1) Start scanning data')
-        print('2) Show all raw results\n')
+        print('2) Show parsed results\n')
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
             print('\n[Receiving data]\n')
@@ -219,12 +225,12 @@ if __name__ == '__main__':
                 main()
                 stop = time.time()
                 print(stop - start)
-                # asyncio.run(filter_result())
+                asyncio.run(filter_result())
         elif enter_decision == 2:
             try:
-                with open('res_data.txt', 'r', encoding="utf-8") as res:
+                with open('result_data.txt', 'r', encoding="utf-8") as res:
                     for i in res:
-                        print(i)
+                        print(i.replace('\n', ''))
             except FileNotFoundError:
                 print('\n[No result yet]\n')
         else:
