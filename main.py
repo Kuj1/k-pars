@@ -137,7 +137,6 @@ async def filter_result(counter: int = counter_parse_date) -> None:
             for check_data in res_data:
                 data_block = check_data.find('div', class_='resultInfo').find('div', class_='bookData')
 
-                # type_book = str(data_block.find('div', class_='tit').find('b', class_='themeFC').get_text())
                 title_book = str(data_block.find('div', class_='tit').find('a').get_text()).replace('\n', '')
                 author_book = str(data_block.find('ul', class_='dot-list').find_all('li')[0].get_text()). \
                     replace('저자 ', ''). \
