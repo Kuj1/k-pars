@@ -19,7 +19,7 @@ httpcore==0.9.1
 httpx==0.13.3
 hyperframe==5.2.0
 idna==2.10
-lxml==4.9.0
+lxml==4.9.1
 multidict==6.0.2
 pyfiglet==0.8.post1
 requests==2.27.1
