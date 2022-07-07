@@ -30,22 +30,30 @@ def add_announce(title, link):
     en_name = title_translate(nice_title, en=True)
     ru_name = title_translate(nice_title, ru=True)
 
+    print('-' * 31, end='\n')
+    print(f'\nTitle(en): {en_name}\nTitle(ru): {ru_name}')
+
     cookies = {
         'session': 'avfgnxufffj9c5nyqjzher',
         '_ym_uid': '1656756443556370607',
         '_ym_d': '1656756443',
         '_tt_enable_cookie': '1',
         '_ttp': '1c10a989-881e-4c95-a91f-e690926421f2',
-        'user': '%7B%22access_token%22%3A%227LDUCtCKLR3wfqx5nWxsZ2UidMHZwQ'
-                '%22%2C%22two_factor_auth%22%3Afalse%2C%22id%22%3A1109069%2C%22username%22%3A%22kontiki%22%2C%22badges'
-                '%22%3A%5B%5D%2C%22is_superuser%22%3Afalse%2C%22is_staff%22%3Afalse%2C%22balance%22%3A%220.00'
-                '%22%2C%22ticket_balance%22%3A0%2C%22avatar%22%3Anull%2C%22email%22%3A%22felaj%40bk.ru'
-                '%22%2C%22sex%22%3A0%2C%22vk_not%22%3Afalse%2C%22yaoi%22%3A0%2C%22adult%22%3Afalse'
-                '%2C%22chapters_read%22%3A0%2C%22vk_id%22%3Anull%2C%22google_id%22%3Anull%2C%22yandex_id%22%3Anull'
-                '%2C%22mail_id%22%3Anull%2C%22is_two_factor_auth%22%3Afalse%2C%22tagline%22%3Anull%2C%22preference'
-                '%22%3A0%2C%22count_views%22%3A0%2C%22count_votes%22%3A0%2C%22count_comments%22%3A0%7D',
         '_ga': 'GA1.2.1623638645.1656756443',
-        '_ga_81J4Q19D6Y': 'GS1.1.1656839304.2.1.1656841087.0',
+        '_gid': 'GA1.2.1935180681.1657206242',
+        '_ym_isad': '2',
+        '_ym_visorc': 'b',
+        'user': '%7B%22access_token%22%3A%225NhYFPBQZg2Y14oAhgmQC5S7S7sLcv%22%2C'
+                '%22two_factor_auth%22%3Afalse%2C%22id%22%3A1108328%2C%22username%22%3A'
+                '%22_Kenito_%22%2C%22badges%22%3A%5B%5D%2C%22is_superuser%22%3Afalse%2C%22is_staff%22%3Afalse%2C'
+                '%22balance%22%3A%220.00%22%2C%22ticket_balance%22%3A0%2C%22avatar%22%3A'
+                '%22https%3A%2F%2Fstorage.yandexcloud.net%2Fmedia.remanga.org%2Fusers%2F1108328%2Favatar.jpg%22%2C'
+                '%22email%22%3A%22khken5577%40gmail.com%22%2C%22sex%22%3A0%2C%22vk_not%22%3Afalse%2C%22yaoi%22%3A0%2C'
+                '%22adult%22%3Afalse%2C%22chapters_read%22%3A1%2C%22vk_id%22%3Anull%2C'
+                '%22google_id%22%3A%22117773140003604571194%22%2C%22yandex_id%22%3Anull%2C'
+                '%22mail_id%22%3Anull%2C%22is_two_factor_auth%22%3Afalse%2C%22tagline%22%3Anull%2C'
+                '%22preference%22%3A0%2C%22count_views%22%3A1%2C%22count_votes%22%3A1%2C%22count_comments%22%3A1%7D',
+        '_ga_81J4Q19D6Y': 'GS1.1.1657206241.5.1.1657206368.0',
     }
 
     headers = {
@@ -53,12 +61,13 @@ def add_announce(title, link):
         'Cache-Control': 'max-age=0',
         'Sec-Ch-Ua': '"Chromium";v="103", ".Not/A)Brand";v="99"',
         'Sec-Ch-Ua-Mobile': '?0',
+        'Sec-Ch-Ua-Platform': '"macOS"',
         'Upgrade-Insecure-Requests': '1',
         'Origin': 'https://remanga.org',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.53 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,'
-                  'image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/103.0.5060.53 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,'
+                  'image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'navigate',
         'Sec-Fetch-User': '?1',
@@ -68,7 +77,7 @@ def add_announce(title, link):
     }
 
     files = {
-        'csrfmiddlewaretoken': (None, 'fYoERkYL4BmGHl3OnrjCRz82FfAwooj2O8rSUUhJYkHcbPfwnoCf4rrW6ZCqwDo9'),
+        'csrfmiddlewaretoken': (None, 'nHEzYaWKlSriUcxhjJ5tRNKHysl7Im6HEVhivRBfkFnkkKYTYZBwIZf0Th8XDl7k'),
         'en_name': (None, f'{en_name}'),
         'rus_name': (None, f'{ru_name}'),
         'another_name': (None, f'{title}'),
@@ -88,8 +97,6 @@ def add_announce(title, link):
         'user_message': (None, None)
     }
     response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
-    # print(requests.Request('POST', 'https://remanga.org/panel/add-titles/', cookies=cookies, files=files).
-    # prepare().body)
 
     soup = BeautifulSoup(response.text, 'lxml')
 
