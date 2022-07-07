@@ -9,7 +9,8 @@ import aiohttp
 import asyncio
 from pyfiglet import Figlet
 from bs4 import BeautifulSoup
-import lxml
+
+from auto_reg import add_announce
 
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -156,11 +157,13 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                         ids.write(f'{isbn_book}\n')
                     row_id.add(isbn_book)
 
+                    url_book = url_pattern + isbn_book
+
                     print(f'Title: {title_book}\n'
                           f'Author: {author_book}\n'
                           f'Publisher: {publisher_book}\n'
                           f'Release date: {release_date_book}\n'
-                          f'Link: {url_pattern}{isbn_book}\n')
+                          f'Link: {url_book}\n')
 
                     if platform.system() == 'Windows':
                         print('\a')
@@ -174,6 +177,7 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                             'Release date': f'{release_date_book}',
                             'Link': f'{url_pattern}{isbn_book}'
                         }
+                    add_announce(title=title_book, link=url_book)
 
                     with open('result_data.txt', 'a', encoding='utf-8') as books:
                         for key, val in res_books.items():
