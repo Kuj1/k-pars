@@ -176,7 +176,10 @@ async def filter_result(counter: int = counter_parse_date) -> None:
                             'Release date': f'{release_date_book}',
                             'Link': f'{url_pattern}{isbn_book}'
                         }
+                    start_announce = time.time()
                     add_announce(title=title_book, link=url_book)
+                    stop_announce = time.time()
+                    print(stop_announce - start_announce)
 
                     with open('result_data.txt', 'a', encoding='utf-8') as books:
                         for key, val in res_books.items():
