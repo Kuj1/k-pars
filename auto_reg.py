@@ -24,8 +24,9 @@ def add_announce(title, link):
     dt = datetime.datetime.now()
     year_now = dt.strftime('%Y')
 
-    nice_title = re.sub(r'\[웹툰]|\[웹툰판]|\[만화]|\[종이책]|\[전자/코믹]|\[연재]|\[전자출판물]|\(연재\)|\(개정판\)|\[박스세트]|\d\.|\d\d\.', '', title).\
-        strip()
+    nice_title = re.sub(
+        r'\[웹툰]|\[웹툰판]|\[만화]|\[종이책]|\[전자/코믹]|\[연재]|\[전자출판물]|\(연재\)|\(개정판\)|\[박스세트]|\d\.|\d\d\.', '', title
+    ).strip()
 
     en_name = title_translate(nice_title, en=True)
     ru_name = title_translate(nice_title, ru=True)
@@ -74,6 +75,7 @@ def add_announce(title, link):
         'Sec-Fetch-Dest': 'document',
         'Referer': 'https://remanga.org/panel/add-titles/',
         'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+        'Connection': 'keep-alive'
     }
 
     files = {
@@ -96,23 +98,17 @@ def add_announce(title, link):
         'readmanga_link': (None, None),
         'user_message': (None, None)
     }
-    # response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
+    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files)
 
-    print(requests.Request('POST', 'https://remanga.org/panel/add-titles/', cookies=cookies, files=files).
-    prepare().body)
+    soup = BeautifulSoup(response.text, 'lxml')
 
-    # soup = BeautifulSoup(response.text, 'lxml')
-    #
-    # success_msg = str(soup.find('div', class_='card-body').
-    #                   find('h1', class_='text-success text-center')).\
-    #     replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
-    #
-    # if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
-    #     print(f'The announcement has been added')
-    #     print('-' * 31, end='\n')
-    # else:
-    #     print('The announcement was not added')
-    #     print('-' * 31, end='\n')
+    success_msg = str(soup.find('div', class_='card-body').
+                      find('h1', class_='text-success text-center')).\
+        replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
 
-
-add_announce('[종이책] 1. [박스세트] 금혼령-조선혼인금지령 1~8', 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn=9791136753861')
+    if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
+        print(f'The announcement has been added')
+        print('-' * 31, end='\n')
+    else:
+        print('The announcement was not added')
+        print('-' * 31, end='\n')
