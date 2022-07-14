@@ -1,35 +1,23 @@
 import requests
 import datetime
 import re
+import os
 
 from bs4 import BeautifulSoup
-from googletrans import Translator
 
-
-def title_translate(title, en=False, ru=False):
-    translator = Translator()
-
-    if en is True:
-        result = translator.translate(title, src='ko', dest='en')
-
-        return result.text
-
-    elif ru is True:
-        result = translator.translate(title, src='ko', dest='ru')
-
-        return result.text
-
+from scripts.translator import translator
 
 def add_announce(title, link):
     dt = datetime.datetime.now()
     year_now = dt.strftime('%Y')
+    path_to_img = os.path.join(os.getcwd(), 'src/cover.png')
 
     nice_title = re.sub(
-        r'\[웹툰]|\[웹툰판]|\[만화]|\[종이책]|\[전자/코믹]|\[연재]|\[전자출판물]|\(연재\)|\(개정판\)|\[박스세트]|\d\.|\d\d\.', '', title
+        r'\[웹툰]|\[웹툰판]|\[만화]|\[종이책]|\[전자/코믹]|\[연재]|\[전자출판물]|\(연재\)|\(개정판\)|\[박스세트]|\(세트\)|\d\.|\d\d\.', '', title
     ).strip()
 
-    en_name = title_translate(nice_title, en=True)
-    ru_name = title_translate(nice_title, ru=True)
+    en_name = translator(nice_title, en=True)
+    ru_name = translator(nice_title, ru=True)
 
     print('-' * 31, end='\n')
     print(f'Title(en): {en_name}\nTitle(ru): {ru_name}')
@@ -61,8 +49,6 @@ def add_announce(title, link):
         'Host': 'remanga.org',
         'Cache-Control': 'max-age=0',
         'Sec-Ch-Ua': '"Chromium";v="103", ".Not/A)Brand";v="99"',
-        'Sec-Ch-Ua-Mobile': '?0',
-        'Sec-Ch-Ua-Platform': '"macOS"',
         'Upgrade-Insecure-Requests': '1',
         'Origin': 'https://remanga.org',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -94,11 +80,14 @@ def add_announce(title, link):
         'mangachan_link': (None, None),
         'original_link': (None, f'{link}'),
         'anlate_link': (None, None),
-        'cover': ('cover.png', open('cover.png', 'rb'), 'image/png'),
+        'cover': ('cover.png', open(path_to_img, 'rb'), 'image/png'),
         'readmanga_link': (None, None),
         'user_message': (None, None)
     }
-    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files)
+    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
+
+    # print(requests.Request('POST', 'https://remanga.org/panel/add-titles/', cookies=cookies, files=files).
+    # prepare().body)
 
     soup = BeautifulSoup(response.text, 'lxml')
 
