@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 from scripts.translator import translator
 
+
 def add_announce(title, link):
     dt = datetime.datetime.now()
     year_now = dt.strftime('%Y')
@@ -85,9 +86,6 @@ def add_announce(title, link):
         'user_message': (None, None)
     }
     response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
-
-    # print(requests.Request('POST', 'https://remanga.org/panel/add-titles/', cookies=cookies, files=files).
-    # prepare().body)
 
     soup = BeautifulSoup(response.text, 'lxml')
 

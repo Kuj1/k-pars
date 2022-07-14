@@ -111,8 +111,6 @@ async def received_data(params, c) -> None:
         await asyncio.sleep(.25)
 
 
-dt = datetime.datetime.now()
-date_now = dt.strftime('%Y-%m-%d')
 ref_date = dt.strftime('%Y%m%d')
 
 url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='

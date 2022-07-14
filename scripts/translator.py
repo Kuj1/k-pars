@@ -7,12 +7,12 @@ from scripts.get_token import get_token
 
 load_dotenv()
 
-IAM_TOKEN = get_token()
-FOLDER_ID = os.getenv('FOLDER_ID')
-
 
 def translator(title: str, en=False, ru=False) -> str:
     global target_language
+
+    IAM_TOKEN = get_token()
+    FOLDER_ID = os.getenv('FOLDER_ID')
 
     if en is True:
         target_language = 'en'
