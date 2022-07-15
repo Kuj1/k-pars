@@ -116,6 +116,11 @@ ref_date = dt.strftime('%Y%m%d')
 url_pattern = 'https://nl.go.kr/seoji/contents/S80100000000.do?schM=intgr_detail_view_isbn&isbn='
 
 row_id = set()
+path_to_result = os.path.join(os.getcwd(), 'result_files')
+if not os.path.exists(path_to_result):
+    os.mkdir(path_to_result)
+    ids_file = open(os.path.join(os.getcwd(), 'result_files/ids.txt'), 'w')
+
 path_to_ids = os.path.join(os.getcwd(), 'result_files/ids.txt')
 with open(path_to_ids, 'r', encoding="utf-8") as rowid:
     for i in rowid:
