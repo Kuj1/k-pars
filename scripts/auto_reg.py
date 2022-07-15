@@ -30,21 +30,24 @@ def add_announce(title, link):
         '_ym_d': '1656756443',
         '_tt_enable_cookie': '1',
         '_ttp': '1c10a989-881e-4c95-a91f-e690926421f2',
-        '_ga': 'GA1.2.1623638645.1656756443',
-        '_gid': 'GA1.2.1935180681.1657206242',
         '_ym_isad': '2',
         '_ym_visorc': 'b',
-        'user': '%7B%22access_token%22%3A%225NhYFPBQZg2Y14oAhgmQC5S7S7sLcv%22%2C'
-                '%22two_factor_auth%22%3Afalse%2C%22id%22%3A1108328%2C%22username%22%3A'
-                '%22_Kenito_%22%2C%22badges%22%3A%5B%5D%2C%22is_superuser%22%3Afalse%2C%22is_staff%22%3Afalse%2C'
-                '%22balance%22%3A%220.00%22%2C%22ticket_balance%22%3A0%2C%22avatar%22%3A'
-                '%22https%3A%2F%2Fstorage.yandexcloud.net%2Fmedia.remanga.org%2Fusers%2F1108328%2Favatar.jpg%22%2C'
-                '%22email%22%3A%22khken5577%40gmail.com%22%2C%22sex%22%3A0%2C%22vk_not%22%3Afalse%2C%22yaoi%22%3A0%2C'
-                '%22adult%22%3Afalse%2C%22chapters_read%22%3A1%2C%22vk_id%22%3Anull%2C'
-                '%22google_id%22%3A%22117773140003604571194%22%2C%22yandex_id%22%3Anull%2C'
-                '%22mail_id%22%3Anull%2C%22is_two_factor_auth%22%3Afalse%2C%22tagline%22%3Anull%2C'
-                '%22preference%22%3A0%2C%22count_views%22%3A1%2C%22count_votes%22%3A1%2C%22count_comments%22%3A1%7D',
-        '_ga_81J4Q19D6Y': 'GS1.1.1657206241.5.1.1657206368.0',
+        '_ga': 'GA1.2.1623638645.1656756443',
+        '_gid': 'GA1.2.1829334205.1657903880',
+        'user': '%7B%22access_token%22%3A%22nMgOvQc9XhazaRTaaRAGsjdzgg9JSa%22'
+                '%2C%22two_factor_auth%22%3Afalse%2C%22id%22%3A969647'
+                '%2C%22username%22%3A%22__Kenito__%22'
+                '%2C%22badges%22%3A%5B%5D%2C%22is_superuser%22'
+                '%3Afalse%2C%22is_staff%22%3Afalse%2C%22balance%22'
+                '%3A%220.00%22%2C%22ticket_balance%22%3A0'
+                '%2C%22avatar%22%3A%22https'
+                '%3A%2F%2Fstorage.yandexcloud.net%2Fmedia.remanga.org%2Fusers%2F969647%2Favatar.jpg%22%2C%22email'
+                '%22%3A%22nokk7557%40gmail.com%22%2C%22sex%22%3A0%2C%22vk_not%22%3Afalse%2C%22yaoi%22'
+                '%3A0%2C%22adult%22%3Afalse%2C%22chapters_read%22%3A1%2C%22vk_id%22%3Anull%2C%22google_id'
+                '%22%3A%22112885013969703297020%22%2C%22yandex_id%22%3Anull%2C%22mail_id'
+                '%22%3Anull%2C%22is_two_factor_auth%22%3Afalse%2C%22tagline%22%3Anull%'
+                '2C%22preference%22%3A0%2C%22count_views%22%3A1%2C%22count_votes%22%3A0%2C%22count_comments%22%3A0%7D',
+        '_ga_81J4Q19D6Y': 'GS1.1.1657903879.7.1.1657903920.0',
     }
 
     headers = {
@@ -67,7 +70,7 @@ def add_announce(title, link):
     }
 
     files = {
-        'csrfmiddlewaretoken': (None, 'nHEzYaWKlSriUcxhjJ5tRNKHysl7Im6HEVhivRBfkFnkkKYTYZBwIZf0Th8XDl7k'),
+        'csrfmiddlewaretoken': (None, '1DsyPDJqxEhCuldIQJtszmkE01ESSB8Uh9gN7z3CNuo5REbv7mXRECibHJ8FiY6U'),
         'en_name': (None, f'{en_name}'),
         'rus_name': (None, f'{ru_name}'),
         'another_name': (None, f'{title}'),
