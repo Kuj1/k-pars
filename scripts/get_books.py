@@ -135,7 +135,7 @@ async def announce_result(counter: int = counter_parse_date) -> None:
             file = doc.read()
 
             soup = BeautifulSoup(file, 'lxml')
-            res_data = soup.find('div', class_='resultList').find_all('div', class_='resultData')
+            res_data = soup.find('div', attrs={'id': 'resultList_div'}).find_all('div', class_='resultData')
 
             for check_data in res_data:
                 data_block = check_data.find('div', class_='resultInfo').find('div', class_='bookData')

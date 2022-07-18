@@ -38,6 +38,11 @@ def translator(title: str, en=False, ru=False) -> str:
         headers=headers
     )
 
-    out_text = response.json()['translations'][0]['text']
+    try:
+        out_text = response.json()['translations'][0]['text']
 
-    return out_text
+        return out_text
+
+    except KeyError:
+        return response.text
+
