@@ -135,66 +135,69 @@ async def announce_result(counter: int = counter_parse_date) -> None:
             file = doc.read()
 
             soup = BeautifulSoup(file, 'lxml')
-            res_data = soup.find('div', attrs={'id': 'resultList_div'}).find_all('div', class_='resultData')
+            try:
+                res_data = soup.find('div', attrs={'id': 'resultList_div'}).find_all('div', class_='resultData')
 
-            for check_data in res_data:
-                data_block = check_data.find('div', class_='resultInfo').find('div', class_='bookData')
+                for check_data in res_data:
+                    data_block = check_data.find('div', class_='resultInfo').find('div', class_='bookData')
 
-                title_book = str(data_block.find('div', class_='tit').find('a').get_text()).replace('\n', '')
-                author_book = str(data_block.find('ul', class_='dot-list').find_all('li')[0].get_text()). \
-                    replace('저자 ', ''). \
-                    replace('원작자', ''). \
-                    replace(' :', '')
-                publisher_book = str(data_block.find('ul', class_='dot-list').find_all('li')[1].get_text()). \
-                    replace('발행처: ', '')
-                release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[4].get_text()). \
-                    replace('발매(예정)일:', '')
-                isbn_book = str(data_block.find('ul', class_='dot-list').find_all('li')[2].get_text()). \
-                    replace('ISBN: ', '').replace('세트', '').split('(')[0].replace('-', '')
-                if not release_date_book.startswith(' '):
-                    release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[5].get_text()). \
+                    title_book = str(data_block.find('div', class_='tit').find('a').get_text()).replace('\n', '')
+                    author_book = str(data_block.find('ul', class_='dot-list').find_all('li')[0].get_text()). \
+                        replace('저자 ', ''). \
+                        replace('원작자', ''). \
+                        replace(' :', '')
+                    publisher_book = str(data_block.find('ul', class_='dot-list').find_all('li')[1].get_text()). \
+                        replace('발행처: ', '')
+                    release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[4].get_text()). \
                         replace('발매(예정)일:', '')
-                if int(release_date_book.replace('.', '')) >= int(ref_date) and isbn_book not in row_id:
-                    with open(path_to_ids, 'a', encoding="utf-8") as ids:
-                        ids.write(f'{isbn_book}\n')
-                    row_id.add(isbn_book)
+                    isbn_book = str(data_block.find('ul', class_='dot-list').find_all('li')[2].get_text()). \
+                        replace('ISBN: ', '').replace('세트', '').split('(')[0].replace('-', '')
+                    if not release_date_book.startswith(' '):
+                        release_date_book = str(data_block.find('ul', class_='dot-list').find_all('li')[5].get_text()). \
+                            replace('발매(예정)일:', '')
+                    if int(release_date_book.replace('.', '')) >= int(ref_date) and isbn_book not in row_id:
+                        with open(path_to_ids, 'a', encoding="utf-8") as ids:
+                            ids.write(f'{isbn_book}\n')
+                        row_id.add(isbn_book)
 
-                    url_book = url_pattern + isbn_book
+                        url_book = url_pattern + isbn_book
 
-                    print(f'Title: {title_book}\n'
-                          f'Author: {author_book}\n'
-                          f'Publisher: {publisher_book}\n'
-                          f'Release date: {release_date_book}\n'
-                          f'Link: {url_book}\n')
+                        print(f'Title: {title_book}\n'
+                              f'Author: {author_book}\n'
+                              f'Publisher: {publisher_book}\n'
+                              f'Release date: {release_date_book}\n'
+                              f'Link: {url_book}\n')
 
-                    if platform.system() == 'Windows':
-                        print('\a')
-                    else:
-                        os.system('say beep')
+                        if platform.system() == 'Windows':
+                            print('\a')
+                        else:
+                            os.system('say beep')
 
-                    res_books = {
-                            'Title': f'{title_book}',
-                            'Author': f'{author_book}',
-                            'Publisher': f'{publisher_book}',
-                            'Release date': f'{release_date_book}',
-                            'Link': f'{url_pattern}{isbn_book}'
-                        }
-                    start_announce = time.time()
-                    add_announce(title=title_book, link=url_book)
-                    stop_announce = time.time()
-                    print(stop_announce - start_announce)
-                    print()
+                        res_books = {
+                                'Title': f'{title_book}',
+                                'Author': f'{author_book}',
+                                'Publisher': f'{publisher_book}',
+                                'Release date': f'{release_date_book}',
+                                'Link': f'{url_pattern}{isbn_book}'
+                            }
+                        start_announce = time.time()
+                        add_announce(title=title_book, link=url_book)
+                        stop_announce = time.time()
+                        print(stop_announce - start_announce)
+                        print()
 
-                    path_to_result_data = os.path.join(os.getcwd(), 'result_files/result_data.txt')
-                    with open(path_to_result_data, 'a', encoding='utf-8') as books:
-                        for key, val in res_books.items():
-                            if key.startswith('Link'):
-                                books.write(f'{key}:{val}\n\n')
-                            else:
-                                books.write(f'{key}:{val}\n')
+                        path_to_result_data = os.path.join(os.getcwd(), 'result_files/result_data.txt')
+                        with open(path_to_result_data, 'a', encoding='utf-8') as books:
+                            for key, val in res_books.items():
+                                if key.startswith('Link'):
+                                    books.write(f'{key}:{val}\n\n')
+                                else:
+                                    books.write(f'{key}:{val}\n')
 
-                    await asyncio.sleep(1)
-                    counter += 1
+                        await asyncio.sleep(1)
+                        counter += 1
+            except AttributeError:
+                continue
 
 
 def get_and_output(params: str, c: int) -> None:
