@@ -89,8 +89,10 @@ def add_announce(title, link):
         'readmanga_link': (None, None),
         'user_message': (None, None)
     }
-    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
 
+    # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
+    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
+    # !!! Before tests need to update auth data !!!
     soup = BeautifulSoup(response.text, 'lxml')
 
     success_msg = str(soup.find('div', class_='card-body').
