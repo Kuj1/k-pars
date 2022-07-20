@@ -91,18 +91,18 @@ def add_announce(title, link):
         'user_message': (None, None)
     }
 
-    prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
-    # response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
-    # # !!! Before tests need to update auth data !!!
-    # soup = BeautifulSoup(response.text, 'lxml')
-    #
-    # success_msg = str(soup.find('div', class_='card-body').
-    #                   find('h1', class_='text-success text-center')).\
-    #     replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
-    #
-    # if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
-    #     print(f'The announcement has been added')
-    #     print('-' * 31, end='\n')
-    # else:
-    #     print('The announcement was not added')
-    #     print('-' * 31, end='\n')
+    # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
+    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
+    # !!! Before tests need to update auth data !!!
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    success_msg = str(soup.find('div', class_='card-body').
+                      find('h1', class_='text-success text-center')).\
+        replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
+
+    if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
+        print(f'The announcement has been added')
+        print('-' * 31, end='\n')
+    else:
+        print('The announcement was not added')
+        print('-' * 31, end='\n')
