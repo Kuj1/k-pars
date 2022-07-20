@@ -15,7 +15,8 @@ def add_announce(title, link):
 
     nice_title = re.sub(
         r'\[웹툰]|웹툰|\(한정판\)|\(완전판\)|\[웹툰 연재]|\[웹툰판]|\[만화]|만화|\[종이책]|\[전자/코믹]|\[연재]|'
-        r'\[전자출판물]|\(연재\)|\(개정판\)|\[박스세트]|\(세트\)|세트|한정판|\(완결\)|\(만화로 배우는\)|\(상\)|\d\.|\d\d\.', '', title
+        r'\[전자출판물]|\(연재\)|\(개정판\)|\[박스세트]|\(세트\)|세트|한정판|\(완결\)|\(만화로 배우는\)|\(상\)|'
+        r'\d\.|\d\d\.|\d권|\d\S\d|X{1,2}|\d|\(웹툰\)|\[개정판]|,', '', title
     ).strip()
 
     en_name = translator(nice_title, en=True)
@@ -90,18 +91,18 @@ def add_announce(title, link):
         'user_message': (None, None)
     }
 
-    # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
-    response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
-    # !!! Before tests need to update auth data !!!
-    soup = BeautifulSoup(response.text, 'lxml')
-
-    success_msg = str(soup.find('div', class_='card-body').
-                      find('h1', class_='text-success text-center')).\
-        replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
-
-    if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
-        print(f'The announcement has been added')
-        print('-' * 31, end='\n')
-    else:
-        print('The announcement was not added')
-        print('-' * 31, end='\n')
+    prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
+    # response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
+    # # !!! Before tests need to update auth data !!!
+    # soup = BeautifulSoup(response.text, 'lxml')
+    #
+    # success_msg = str(soup.find('div', class_='card-body').
+    #                   find('h1', class_='text-success text-center')).\
+    #     replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
+    #
+    # if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
+    #     print(f'The announcement has been added')
+    #     print('-' * 31, end='\n')
+    # else:
+    #     print('The announcement was not added')
+    #     print('-' * 31, end='\n')
