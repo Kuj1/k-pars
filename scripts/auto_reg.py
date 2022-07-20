@@ -22,7 +22,7 @@ def add_announce(title, link):
     ru_name = translator(nice_title, ru=True)
 
     print('-' * 31, end='\n')
-    print(f'Title(en): {en_name}\nTitle(ru): {ru_name}')
+    print(f'Title(en): {en_name}\nTitle(ru): {ru_name}\nTitle(ko): {nice_title}')
 
     cookies = {
         'session': 'avfgnxufffj9c5nyqjzher',
@@ -73,7 +73,7 @@ def add_announce(title, link):
         'csrfmiddlewaretoken': (None, '1DsyPDJqxEhCuldIQJtszmkE01ESSB8Uh9gN7z3CNuo5REbv7mXRECibHJ8FiY6U'),
         'en_name': (None, f'{en_name}'),
         'rus_name': (None, f'{ru_name}'),
-        'another_name': (None, f'{title}'),
+        'another_name': (None, f'{nice_title}'),
         'description': (None, None),
         'type': (None, 1),
         'categories': (None, 5),
