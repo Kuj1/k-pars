@@ -194,7 +194,6 @@ async def announce_result(counter: int = counter_parse_date) -> None:
                                 else:
                                     books.write(f'{key}:{val}\n')
 
-                        await asyncio.sleep(1)
                         counter += 1
             except AttributeError:
                 continue
