@@ -71,7 +71,8 @@ def add_announce(title, link):
     }
 
     files = {
-        'csrfmiddlewaretoken': (None, '1DsyPDJqxEhCuldIQJtszmkE01ESSB8Uh9gN7z3CNuo5REbv7mXRECibHJ8FiY6U'),
+        # Old Token: 1DsyPDJqxEhCuldIQJtszmkE01ESSB8Uh9gN7z3CNuo5REbv7mXRECibHJ8FiY6U
+        'csrfmiddlewaretoken': (None, 'gikc96IzoSO9GVa5r6nEPH9oyGWBWX1tQOyStUnwz6WoA1pWOg5zwfFPwShCBwCm'),
         'en_name': (None, f'{en_name}'),
         'rus_name': (None, f'{ru_name}'),
         'another_name': (None, f'{nice_title}'),
@@ -93,13 +94,13 @@ def add_announce(title, link):
 
     # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
     response = requests.post('https://remanga.org/panel/add-titles/', cookies=cookies, files=files, headers=headers)
-    # !!! Before tests need to update auth data !!!
+    # # !!! Before tests need to update auth data !!!
     soup = BeautifulSoup(response.text, 'lxml')
-
+    
     success_msg = str(soup.find('div', class_='card-body').
                       find('h1', class_='text-success text-center')).\
         replace('<h1 class="text-success text-center">', '').replace('</h1>', '').strip()
-
+    
     if success_msg.startswith('Спасибо за помощь проекту') and response.status_code != 204:
         print(f'The announcement has been added')
         print('-' * 31, end='\n')
