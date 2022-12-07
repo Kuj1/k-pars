@@ -129,7 +129,7 @@ with open(path_to_ids, 'r', encoding="utf-8") as rowid:
 counter_parse_date = 0
 
 
-async def announce_result(counter: int = counter_parse_date) -> None:
+async def announce_result(counter: int = counter_parse_date, not_to_post: bool = False) -> None:
     for i_dir in os.listdir(dir_path):
         with open(os.path.join(dir_path, i_dir), 'r', encoding="utf-8") as doc:
             file = doc.read()
@@ -180,11 +180,15 @@ async def announce_result(counter: int = counter_parse_date) -> None:
                                 'Release date': f'{release_date_book}',
                                 'Link': f'{url_pattern}{isbn_book}'
                             }
-                        start_announce = time.time()
-                        add_announce(title=title_book, link=url_book)
-                        stop_announce = time.time()
-                        print(stop_announce - start_announce)
-                        print()
+
+                        if not_to_post:
+                            continue
+                        else:
+                            start_announce = time.time()
+                            add_announce(title=title_book, link=url_book)
+                            stop_announce = time.time()
+                            print(stop_announce - start_announce)
+                            print()
 
                         path_to_result_data = os.path.join(os.getcwd(), 'result_files/result_data.txt')
                         with open(path_to_result_data, 'a', encoding='utf-8') as books:
