@@ -70,7 +70,7 @@ def add_announce(title, link):
         'cover': f'image/png;base64,{encoded_string}',
     }
 
-    # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', files=files).prepare().body
+    # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', json=json_data).prepare().body
     response = requests.post('https://api.remanga.org/api/titles/', headers=headers, json=json_data)
     # # !!! Before tests need to update auth data !!!
 
