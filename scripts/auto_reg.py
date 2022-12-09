@@ -70,9 +70,16 @@ def add_announce(title, link):
         'cover': f'image/png;base64,{encoded_string}',
     }
 
-    # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', json=json_data).prepare().body
-    response = requests.post('https://api.remanga.org/api/titles/', headers=headers, json=json_data)
-    # # !!! Before tests need to update auth data !!!
+    try:
+        # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', json=json_data).prepare().body
+        response = requests.post('https://api.remanga.org/api/titles/', headers=headers, json=json_data)
+        # # !!! Before tests need to update auth data !!!
+    except Exception as ex:
+        with open('error.log', 'w') as log:
+            message = 'An exception of type {0} occurred.\n[ARGUMENTS]: {1!r}'.format(type(ex).__name__, ex.args)
+            log.write(
+                f'[ERROR]: {ex}\n[TYPE EXCEPTION]: {message}\n' + '-' * len(
+                    message))
 
     try:
         json_resp = json.loads(response.text)

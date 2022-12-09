@@ -186,6 +186,7 @@ async def announce_result(counter: int = counter_parse_date, not_to_post: bool =
                         else:
                             start_announce = time.time()
                             add_announce(title=title_book, link=url_book)
+                            time.sleep(1)
                             stop_announce = time.time()
                             print(stop_announce - start_announce)
                             print()
