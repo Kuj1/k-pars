@@ -30,11 +30,14 @@ def add_announce(title, link):
 
     headers = {
         'Host': 'api.remanga.org',
-        'Sec-Ch-Ua': '"Chromium";v="107", "Not=A?Brand";v="24"',
+        # 'Content-Length': '29521',
+        'Sec-Ch-Ua': '"Not?A_Brand";v="8", "Chromium";v="108"',
+        # 'Content-Type': 'application/json',
         'Preference': '1',
         'Sec-Ch-Ua-Mobile': '?0',
         'Authorization': 'bearer nMgOvQc9XhazaRTaaRAGsjdzgg9JSa',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.107 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/'
+                      '537.36 (KHTML, like Gecko) Chrome/108.0.5359.95 Safari/537.36',
         'Sec-Ch-Ua-Platform': '"macOS"',
         'Accept': '*/*',
         'Origin': 'https://remanga.org',
@@ -72,16 +75,10 @@ def add_announce(title, link):
 
     try:
         # prepare = requests.Request('POST', 'https://remanga.org/panel/add-titles/', json=json_data).prepare().body
-        response = requests.post('https://api.remanga.org/api/titles/', headers=headers, json=json_data)
+        response = requests.post('https://api.remanga.org/api/titles/', headers=headers, data=json_data)
         # # !!! Before tests need to update auth data !!!
-    except Exception as ex:
-        with open('error.log', 'w') as log:
-            message = 'An exception of type {0} occurred.\n[ARGUMENTS]: {1!r}'.format(type(ex).__name__, ex.args)
-            log.write(
-                f'[ERROR]: {ex}\n[TYPE EXCEPTION]: {message}\n' + '-' * len(
-                    message))
 
-    try:
+        # print(response.text)
         json_resp = json.loads(response.text)
 
         if json_resp['msg'] == 'ok' and response.status_code != 204:
