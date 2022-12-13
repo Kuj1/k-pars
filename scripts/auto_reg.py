@@ -80,6 +80,7 @@ def add_announce(title, link):
 
         # print(response.text)
         json_resp = json.loads(response.text)
+        print(json_resp)
 
         if json_resp['msg'] == 'ok' and response.status_code != 204:
             print(f'The announcement has been added')
