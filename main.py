@@ -12,7 +12,6 @@ if __name__ == '__main__':
         print('1) Start scanning data and posting')
         print('2) Start scanning data without posting')
         print('3) Show parsed results\n')
-        # print('3) Start scanning data without posting\n')
         enter_decision = int(input('Choose option and enter number:\n-> '))
         if enter_decision == 1:
             print('\n[Receiving data]\n')
