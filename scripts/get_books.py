@@ -103,8 +103,8 @@ async def received_data(params, c) -> None:
             if resp.status != 204 and resp.headers['Content-Type'].strip().startswith("text/html"):
                 with open(f'{os.path.join(dir_path, f"data_{c}.html")}', 'w', encoding="utf-8") as outfile:
                     outfile.write(await resp.text())
-                print(resp.status, datetime.datetime.now())
-                print(f'{resp.headers["Content-Type"]}\n')
+                # print(resp.status, datetime.datetime.now())
+                # print(f'{resp.headers["Content-Type"]}\n')
             else:
                 print(resp.status, datetime.datetime.now())
                 print(f'{resp.headers["content-type"]}\n')

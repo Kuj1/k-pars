@@ -73,11 +73,9 @@ def add_announce(title, link):
         json_resp = json.loads(response.text)
 
         if json_resp['msg'] == 'ok' and response.status_code != 204:
-            print(response.text)
             print(f'The announcement has been added')
             print('-' * 31, end='\n')
     except Exception as ex:
-        print(response.text)
         with open('error.log', 'w') as log:
             message = 'An exception of type {0} occurred.\n[ARGUMENTS]: {1!r}'.format(type(ex).__name__, ex.args)
             log.write(
